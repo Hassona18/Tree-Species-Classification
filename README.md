@@ -197,4 +197,5 @@ training_params = {
 1. He, K., et al. (2015). Deep Residual Learning for Image Recognition
 2. Chollet, F. (2017). Xception: Deep Learning with Depthwise Separable Convolutions
 3. Huang, G., et al. (2017). Densely Connected Convolutional Networks
-The (Dataset)[https://www.kaggle.com/c/plant-seedlings-classification/data]
+The [https://www.kaggle.com/c/plant-seedlings-classification/data](Dataset)
+the [https://www.canva.com/design/DAGZkcQyQ4U/e9Ki35mRd6_vS6TIf4NJaQ/edit](document) 
