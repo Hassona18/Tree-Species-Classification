@@ -7,7 +7,7 @@ The aim is to identify the best-performing model for accurate plant species clas
 
 ---
 
-## 📁 Dataset Details
+## 📁 Dataset Details 
 - **Classes**: 12 plant species.
 - **Preprocessing**:
   - Resizing: All images resized to `224x224 pixels`.
@@ -16,7 +16,7 @@ The aim is to identify the best-performing model for accurate plant species clas
   - Train-Test Split: Dataset split in an 80/20 ratio.
   - Class Weights: Computed to address dataset imbalance.
   - Data Augmentation: Applied techniques include rotation, zoom, flips, and shifts.
-
+-For more information and to access the dataset, visit [Plant Seedlings Classification Dataset on Kaggle](https://www.kaggle.com/c/plant-seedlings-classification/data).
 ---
 
 ## 🛠️ Model Architectures
