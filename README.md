@@ -1,201 +1,101 @@
-# Tree-Species-Classification
-"Tree Species Classification is an AI-powered project that uses machine learning to identify and categorize tree species based on features like leaf, bark, and overall morphology."
+# 🌱 Plant Seedlings Classification Project
+
+## Overview
+This project focuses on **classifying plant seedlings** into their respective species using deep learning techniques. It compares the performance of three state-of-the-art convolutional neural network (CNN) architectures: **ResNet**, **Xception**, and **DenseNet**. 
+
+The aim is to identify the best-performing model for accurate plant species classification while handling class imbalance and maximizing generalization.
+
 ---
-# Deep Learning Image Classification Project Documentation
 
-## 1. Project Overview
+## 📁 Dataset Details
+- **Classes**: 12 plant species.
+- **Preprocessing**:
+  - Resizing: All images resized to `224x224 pixels`.
+  - Normalization: Pixel values scaled to `[0, 1]`.
+  - Label Encoding: Plant species encoded and converted to categorical format.
+  - Train-Test Split: Dataset split in an 80/20 ratio.
+  - Class Weights: Computed to address dataset imbalance.
+  - Data Augmentation: Applied techniques include rotation, zoom, flips, and shifts.
 
-### Objective
+---
 
-Develop and compare state-of-the-art convolutional neural network (CNN) architectures for robust image classification, focusing on ResNet, Xception, and DenseNet models.
+## 🛠️ Model Architectures
 
-### Key Research Questions
+### 1️⃣ **ResNet (from Scratch)**
+- **Core Features**:
+  - Residual Blocks for mitigating vanishing gradient issues.
+  - Custom top layers for task-specific feature learning.
+  - Strong generalization aided by class weights and data augmentation.
+- **Metrics**:
+  - High performance on large datasets but requires careful regularization.
 
-- How do different CNN architectures perform on our specific dataset?
-- What are the computational and accuracy trade-offs between these models?
-- How effective is transfer learning in improving model performance?
+### 2️⃣ **Xception (Transfer Learning)**
+- **Highlights**:
+  - Pre-trained on ImageNet for feature extraction.
+  - Lightweight and computationally efficient.
+  - Custom dense layers added for the specific task.
+- **Advantages**:
+  - Faster convergence and reduced training time.
 
-## 2. Preprocessing Pipeline
+### 3️⃣ **DenseNet121 (Transfer Learning)**
+- **Innovations**:
+  - Dense Connectivity: Feature reuse across layers.
+  - Pre-trained weights improve performance on limited datasets.
+- **Benefits**:
+  - Superior accuracy and AUC scores.
+  - Fewer parameters compared to ResNet.
+- **Trade-offs**:
+  - Requires more memory and is computationally intensive.
 
-### Data Management
+---
 
-- **Dataset Location**: `F:\deep`
-- **Directory Structure**:
+## 📊 Evaluation Metrics
+- **Accuracy**
+- **Confusion Matrix**
+- **ROC & AUC Curves**
+- **Precision, Recall, F1-score**
+- **Training/Validation Loss & Accuracy Curves**
 
-  ```
-  F:\deep
-  ├── train
-  │   ├── class1
-  │   ├── class2
-  │   └── ...
-  └── test
-      ├── class1
-      ├── class2
-      └── ...
-  ```
+---
 
-### Image Preprocessing Techniques
+## 🔑 Key Findings
+- **DenseNet121**: Achieved the best overall performance, making it the recommended model for final implementation.
+- **Xception**: A strong contender, notable for its efficiency.
+- **ResNet**: Performed well but lagged slightly due to training from scratch on limited data.
 
-#### Preprocessing Steps
+---
 
-1. **Image Standardization**
-   - Resize: 224x224 pixels (consistent input for all models)
-   - Color Space: RGB using OpenCV
-   - Normalization: Pixel values scaled to [0, 1] range
+## ⚙️ Project Setup
 
-2. **Data Augmentation**
-
-   ```python
-   augmentation_params = {
-       'rotation_range': 20,
-       'width_shift_range': 0.2,
-       'height_shift_range': 0.2,
-       'shear_range': 0.2,
-       'zoom_range': 0.2,
-       'horizontal_flip': True
-   }
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Hassona18/plant-seedlings-classification.git
+   ```
+2. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Run the Code**:
+   ```bash
+   python plant-seedlings-classification.ipynb
    ```
 
-#### Label Processing
+---
 
-- Encoding Strategy:
+## 🧑‍💻 Contributors
+- **Mohab**
+- **Sayed Saber**
+- **Saeed Saber**
+- **Hassan Anees**
+- **Ashraf**
+- **Khaled**
 
-  ```python
-  from sklearn.preprocessing import LabelEncoder
-  from tensorflow.keras.utils import to_categorical
+---
 
-  label_encoder = LabelEncoder()
-  y_encoded = label_encoder.fit_transform(labels)
-  y_categorical = to_categorical(y_encoded)
-  ```
+## 📭 Contact
+- **Email**: [hassananees188@gmail.com](mailto:hassananees188@gmail.com)
+- **Website**: [fgffs3444.com](https://www.fgffs3444.com)
+- **Phone**: +20 1144438800
 
-- **Class Balance**
+---
 
-  ```python
-  from sklearn.utils.class_weight import compute_class_weight
-  class_weights = compute_class_weight(
-      class_weight='balanced', 
-      classes=np.unique(y_train), 
-      y=y_train
-  )
-  ```
-
-## 3. Model Architectures
-
-### 3.1 ResNet Architecture
-
-#### Network Configuration
-
-- Base Architecture: ResNet50V2
-- Initial Layer: 64 filters, 7x7 kernel, stride 2
-- Regularization: L2 (kernel_regularizer)
-- Activation: ReLU
-
-#### Training Configuration
-
-```python
-model_config = {
-    'optimizer': Adam(learning_rate=1e-4),
-    'loss': 'categorical_crossentropy',
-    'metrics': ['accuracy', 'precision', 'recall']
-}
-```
-
-### 3.2 Xception Architecture
-
-#### Transfer Learning Strategy
-
-- Base Model: Xception (ImageNet weights)
-- Freezing Strategy:
-  1. Freeze base layers initially
-  2. Gradual unfreezing during fine-tuning
-
-#### Custom Top Layers
-
-```python
-def create_xception_model(input_shape, num_classes):
-    base_model = Xception(
-        weights='imagenet', 
-        include_top=False, 
-        input_shape=input_shape
-    )
-    x = base_model.output
-    x = GlobalAveragePooling2D()(x)
-    x = Dense(512, activation='relu')(x)
-    x = Dropout(0.5)(x)
-    output = Dense(num_classes, activation='softmax')(x)
-    
-    return Model(inputs=base_model.input, outputs=output)
-```
-
-### 3.3 DenseNet Architecture
-
-#### Transfer Learning Approach
-
-- Base Model: DenseNet121
-- Similar custom head to Xception
-- Efficient feature propagation
-
-## 4. Training and Evaluation
-
-### Training Parameters
-
-```python
-training_params = {
-    'epochs': 50,
-    'batch_size': 32,
-    'validation_split': 0.2,
-    'early_stopping': EarlyStopping(
-        monitor='val_loss', 
-        patience=5
-    )
-}
-```
-
-### Performance Metrics
-
-- Accuracy
-- Precision
-- Recall
-- F1-Score
-- AUC-ROC
-- Confusion Matrix
-
-### Visualization Techniques
-
-1. Training Curves
-2. Confusion Matrices
-3. ROC Curves
-4. Precision-Recall Curves
-
-## 5. Experimental Results
-
-### Comparative Analysis Table
-
-| Model      | Accuracy | Precision | Recall | F1-Score | Inference Time |
-|------------|----------|-----------|--------|----------|----------------|
-| ResNet     | X%       | X%        | X%     | X%       | X ms           |
-| Xception   | X%       | X%        | X%     | X%       | X ms           |
-| DenseNet   | X%       | X%        | X%     | X%       | X ms           |
-
-## 6. Conclusions and Recommendations
-
-### Key Insights
-
-- Model performance varies based on dataset characteristics
-- Transfer learning significantly improves initial performance
-- Computational efficiency differs across architectures
-
-### Future Work
-
-- Experiment with more advanced architectures
-- Explore ensemble methods
-- Implement more sophisticated data augmentation
-
-## References
-
-1. He, K., et al. (2015). Deep Residual Learning for Image Recognition
-2. Chollet, F. (2017). Xception: Deep Learning with Depthwise Separable Convolutions
-3. Huang, G., et al. (2017). Densely Connected Convolutional Networks
-The [https://www.kaggle.com/c/plant-seedlings-classification/data](Dataset)
-the [https://www.canva.com/design/DAGZkcQyQ4U/e9Ki35mRd6_vS6TIf4NJaQ/edit](document) 
